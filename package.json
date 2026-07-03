@@ -1,0 +1,34 @@
+{
+  "name": "create-frontend",
+  "version": "0.1.0",
+  "description": "Create a frontend starter project with React Router, React, Tailwind CSS, and pragmatic defaults.",
+  "type": "module",
+  "bin": {
+    "create-frontend": "src/index.js"
+  },
+  "files": [
+    "src",
+    "templates"
+  ],
+  "scripts": {
+    "check": "node --check src/index.js",
+    "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
+    "pack:dry": "pnpm pack --dry-run"
+  },
+  "keywords": [
+    "create",
+    "frontend",
+    "react",
+    "react-router",
+    "tailwindcss",
+    "template"
+  ],
+  "license": "MIT",
+  "packageManager": "pnpm@11.1.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
