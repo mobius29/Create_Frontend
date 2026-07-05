@@ -1,20 +1,7 @@
 {
-  "name": "create-frontend",
+  "name": "@mobius29/template-frontend",
   "version": "0.1.0",
   "description": "Create a frontend starter project with React Router, React, Tailwind CSS, and pragmatic defaults.",
-  "type": "module",
-  "bin": {
-    "create-frontend": "src/index.js"
-  },
-  "files": [
-    "src",
-    "templates"
-  ],
-  "scripts": {
-    "check": "node --check src/index.js",
-    "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
-    "pack:dry": "pnpm pack --dry-run"
-  },
   "keywords": [
     "create",
     "frontend",
@@ -24,11 +11,24 @@
     "template"
   ],
   "license": "MIT",
-  "packageManager": "pnpm@11.1.1",
+  "bin": {
+    "create-frontend": "src/index.js"
+  },
+  "files": [
+    "src",
+    "templates"
+  ],
+  "type": "module",
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "check": "node --check src/index.js && node --check src/args.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js",
+    "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
+    "pack:dry": "pnpm pack --dry-run"
+  },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "packageManager": "pnpm@11.1.1"
 }
