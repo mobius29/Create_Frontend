@@ -245,8 +245,18 @@ pnpm login
 패키지를 배포합니다.
 
 ```bash
-pnpm publish --access public
+pnpm publish:public
 ```
+
+`@mobius29/create-frontend`를 배포하려면 npm 계정 또는 organization scope가 `@mobius29`여야 합니다.
+배포 전 현재 로그인 계정을 확인합니다.
+
+```bash
+npm whoami
+```
+
+`mobius29` npm 사용자 scope가 아니라 organization scope라면 npmjs.com에서 `mobius29` organization을 만들었거나,
+해당 organization에 publish 권한이 있는 계정으로 로그인되어 있어야 합니다.
 
 배포 후 사용자는 다음 명령을 사용할 수 있습니다.
 
