@@ -33,10 +33,10 @@
     "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
     "smoke:next-oxc": "node src/index.js /tmp/create-frontend-next-oxc-smoke --template next-oxc --no-install --no-git --overwrite",
     "pack:dry": "pnpm pack --dry-run",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
-    "format": "oxfmt",
-    "format:check": "oxfmt --check"
+    "lint": "oxlint --disable-nested-config",
+    "lint:fix": "oxlint --disable-nested-config --fix",
+    "format": "oxfmt --disable-nested-config",
+    "format:check": "oxfmt --disable-nested-config --check"
   },
   "dependencies": {
     "commander": "^15.0.0"
