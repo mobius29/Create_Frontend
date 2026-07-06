@@ -1,10 +1,14 @@
 {
   "name": "@mobius29/template-frontend",
   "version": "0.1.0",
-  "description": "Create a frontend starter project with React Router, React, Tailwind CSS, and pragmatic defaults.",
+  "description": "Create a frontend starter project with React Router, Next.js, React, Tailwind CSS, and pragmatic defaults.",
   "keywords": [
     "create",
     "frontend",
+    "next",
+    "nextjs",
+    "oxc",
+    "oxlint",
     "react",
     "react-router",
     "tailwindcss",
@@ -16,6 +20,7 @@
   },
   "files": [
     "src",
+    "scripts",
     "templates"
   ],
   "type": "module",
@@ -23,8 +28,10 @@
     "access": "public"
   },
   "scripts": {
-    "check": "node --check src/index.js && node --check src/args.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js",
+    "check": "node --check src/index.js && node --check src/args.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js && node --check scripts/generate-next-oxc-template.js",
+    "install:next-oxc": "node scripts/generate-next-oxc-template.js --force",
     "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
+    "smoke:next-oxc": "node src/index.js /tmp/create-frontend-next-oxc-smoke --template next-oxc --no-install --no-git --overwrite",
     "pack:dry": "pnpm pack --dry-run"
   },
   "engines": {
