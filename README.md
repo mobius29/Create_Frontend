@@ -1,11 +1,11 @@
-# @mobius29/template-frontend
+# @mobius29/create-frontend
 
 나만의 프론트엔드 시작 템플릿을 생성하는 CLI 패키지입니다.
 
 배포 후에는 다음 명령으로 새 프로젝트를 만들 수 있습니다.
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app
+pnpm create @mobius29/frontend
 ```
 
 패키지 내부 bin 이름은 `create-frontend`입니다.
@@ -24,52 +24,68 @@ pnpm dlx @mobius29/template-frontend my-app
 
 ## Usage
 
+인자를 주지 않으면 CLI가 필요한 값을 순서대로 물어봅니다.
+
 ```bash
-pnpm dlx @mobius29/template-frontend my-app
+pnpm create @mobius29/frontend
 ```
 
-템플릿을 명시하려면:
+인터랙티브 모드에서 선택하는 항목:
+
+- 템플릿
+- 프로젝트 이름
+- 대상 폴더가 비어 있지 않을 때 덮어쓰기 여부
+- 의존성 설치 여부
+- Git 저장소 초기화 여부
+
+프로젝트 이름을 바로 지정하려면:
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app --template react-router-ts
+pnpm create @mobius29/frontend my-app
 ```
 
-Next.js 템플릿을 사용하려면:
+템플릿을 바로 지정하려면:
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app --template next-oxc
+pnpm create @mobius29/frontend my-app --template react-router-ts
 ```
 
-생성 후 의존성 설치까지 실행하려면:
+Next.js 템플릿을 바로 사용하려면:
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app --install
+pnpm create @mobius29/frontend my-app --template next-oxc
 ```
 
-Git 저장소 초기화까지 같이 하려면:
+생성 후 의존성 설치까지 바로 실행하려면:
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app --install --git
+pnpm create @mobius29/frontend my-app --install
 ```
 
-기존 폴더를 비우고 다시 생성하려면:
+Git 저장소 초기화까지 바로 실행하려면:
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app --overwrite
+pnpm create @mobius29/frontend my-app --install --git
+```
+
+기존 폴더를 프롬프트 없이 비우고 다시 생성하려면:
+
+```bash
+pnpm create @mobius29/frontend my-app --overwrite
 ```
 
 ## CLI Options
 
-| Option              | Description                                                   |
-| ------------------- | ------------------------------------------------------------- |
-| `--template <name>` | 사용할 템플릿을 지정합니다. 기본값은 `react-router-ts`입니다. |
-| `--install`         | 생성 후 의존성을 설치합니다.                                  |
-| `--no-install`      | 의존성 설치를 건너뜁니다.                                     |
-| `--git`             | 생성 후 `git init`을 실행합니다.                              |
-| `--no-git`          | Git 초기화를 건너뜁니다.                                      |
-| `--overwrite`       | 대상 폴더가 비어 있지 않아도 내용을 삭제하고 생성합니다.      |
-| `-y`, `--yes`       | 프롬프트 없이 기본값을 사용합니다.                            |
-| `-h`, `--help`      | 도움말을 출력합니다.                                          |
+| Option              | Description                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| `--template <name>` | 템플릿 선택 프롬프트를 건너뛰고 사용할 템플릿을 지정합니다. 기본값은 `react-router-ts`입니다. |
+| `--install`         | 설치 여부 프롬프트를 건너뛰고 생성 후 의존성을 설치합니다.                                    |
+| `--no-install`      | 설치 여부 프롬프트를 건너뛰고 의존성 설치를 생략합니다.                                       |
+| `--git`             | Git 초기화 프롬프트를 건너뛰고 생성 후 `git init`을 실행합니다.                               |
+| `--no-git`          | Git 초기화 프롬프트를 건너뛰고 Git 초기화를 생략합니다.                                       |
+| `--overwrite`       | 덮어쓰기 프롬프트를 건너뛰고 대상 폴더가 비어 있지 않아도 내용을 삭제하고 생성합니다.         |
+| `-y`, `--yes`       | 프롬프트 없이 기본값을 사용합니다. 프로젝트 이름 기본값은 `my-app`입니다.                     |
+| `-h`, `--help`      | 도움말을 출력합니다.                                                                          |
 
 ## Templates
 
@@ -132,7 +148,7 @@ pnpm format
 ## Project Structure
 
 ```txt
-template-frontend/
+create-frontend/
   src/
     index.js
   templates/
@@ -209,13 +225,13 @@ pnpm pack --dry-run
 
 ```bash
 pnpm pack --pack-destination /tmp
-pnpm dlx /tmp/mobius29-template-frontend-0.1.0.tgz my-app --template react-router-ts --no-install --no-git
+pnpm dlx /tmp/mobius29-create-frontend-0.1.0.tgz my-app --template react-router-ts --no-install --no-git
 ```
 
 Next.js 템플릿 실행 경로도 검증합니다.
 
 ```bash
-pnpm dlx /tmp/mobius29-template-frontend-0.1.0.tgz my-app --template next-oxc --no-install --no-git
+pnpm dlx /tmp/mobius29-create-frontend-0.1.0.tgz my-app --template next-oxc --no-install --no-git
 ```
 
 ## Publish
@@ -235,13 +251,13 @@ pnpm publish --access public
 배포 후 사용자는 다음 명령을 사용할 수 있습니다.
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app
+pnpm create @mobius29/frontend my-app
 ```
 
 특정 버전을 실행하려면:
 
 ```bash
-pnpm dlx @mobius29/template-frontend@latest my-app
+pnpm create @mobius29/frontend@latest my-app
 ```
 
 ## Naming Rule
@@ -254,13 +270,10 @@ pnpm dlx @mobius29/template-frontend@latest my-app
 | `pnpm create @scope/frontend` | `@scope/create-frontend` |
 | `pnpm create @scope`          | `@scope/create`          |
 
-현재 패키지 이름은 `@mobius29/template-frontend`이므로 `pnpm create frontend` 대상 패키지가 아닙니다.
-`pnpm create @mobius29/frontend` 명령을 쓰려면 패키지 이름을 `@mobius29/create-frontend`로 배포해야 합니다.
-
-현재 패키지 이름을 유지할 때의 실행 명령은 다음과 같습니다.
+현재 패키지 이름은 `@mobius29/create-frontend`이므로 배포 후 목표 명령은 다음과 같습니다.
 
 ```bash
-pnpm dlx @mobius29/template-frontend my-app
+pnpm create @mobius29/frontend my-app
 ```
 
 ## Notes

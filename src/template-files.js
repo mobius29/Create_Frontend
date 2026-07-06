@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { defaultTemplate, templatesRoot } from "./config.js";
 import { pathExists } from "./filesystem.js";
-import { isInteractive, prompt } from "./prompts.js";
+import { resolveChoiceOption } from "./prompts.js";
 
 export async function getTemplates() {
   const entries = await readdir(templatesRoot, { withFileTypes: true });
@@ -28,21 +28,18 @@ export async function resolveTemplate(templateName, templates, yes) {
     return templateName;
   }
 
-  if (templates.includes(defaultTemplate)) {
-    return defaultTemplate;
-  }
+  const defaultValue = templates.includes(defaultTemplate) ? defaultTemplate : templates[0];
 
-  if (yes || !isInteractive()) {
-    return templates[0];
-  }
-
-  const answer = await prompt(`Template (${templates.join(", ")})`, templates[0]);
-
-  if (!templates.includes(answer)) {
-    throw new Error(`Unknown template "${answer}". Available templates: ${templates.join(", ")}.`);
-  }
-
-  return answer;
+  return resolveChoiceOption({
+    choices: templates.map((template) => ({
+      name: template,
+      value: template,
+    })),
+    currentValue: templateName,
+    defaultValue,
+    message: "Template",
+    yes,
+  });
 }
 
 export async function copyTemplate(templateName, targetDir) {

@@ -29,6 +29,23 @@ export async function prepareTargetDirectory(targetDir, overwrite) {
   await emptyDirectory(targetDir);
 }
 
+export async function targetDirectoryNeedsOverwrite(targetDir) {
+  const exists = await pathExists(targetDir);
+
+  if (!exists) {
+    return false;
+  }
+
+  const targetStat = await stat(targetDir);
+
+  if (!targetStat.isDirectory()) {
+    return false;
+  }
+
+  const files = await readdir(targetDir);
+  return files.length > 0;
+}
+
 async function emptyDirectory(directory) {
   const entries = await readdir(directory);
 

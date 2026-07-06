@@ -1,5 +1,5 @@
 {
-  "name": "@mobius29/template-frontend",
+  "name": "@mobius29/create-frontend",
   "version": "0.1.0",
   "description": "Create a frontend starter project with React Router, Next.js, React, Tailwind CSS, and pragmatic defaults.",
   "keywords": [
@@ -28,7 +28,9 @@
     "access": "public"
   },
   "scripts": {
-    "check": "node --check src/index.js && node --check src/args.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js && node --check scripts/generate-next-oxc-template.js",
+    "check": "node --check src/index.js && node --check src/args.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js && node --check scripts/generate-next-oxc-template.js && node --check scripts/clean-test-artifacts.js",
+    "clean:test": "node scripts/clean-test-artifacts.js",
+    "clean:test:dry": "node scripts/clean-test-artifacts.js --dry-run",
     "install:next-oxc": "node scripts/generate-next-oxc-template.js --force",
     "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
     "smoke:next-oxc": "node src/index.js /tmp/create-frontend-next-oxc-smoke --template next-oxc --no-install --no-git --overwrite",
@@ -39,6 +41,7 @@
     "format:check": "oxfmt --disable-nested-config --check"
   },
   "dependencies": {
+    "@inquirer/prompts": "^8.5.2",
     "commander": "^15.0.0"
   },
   "devDependencies": {
@@ -46,7 +49,7 @@
     "oxlint": "^1.62.0"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   },
   "packageManager": "pnpm@11.1.1"
 }

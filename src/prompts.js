@@ -1,5 +1,6 @@
-import { stdin as input, stdout as output } from "node:process";
-import { createInterface } from "node:readline/promises";
+import { stdin, stdout } from "node:process";
+
+import { confirm, input, select } from "@inquirer/prompts";
 
 export async function resolveTargetName(targetDir, yes) {
   if (targetDir) {
@@ -11,7 +12,29 @@ export async function resolveTargetName(targetDir, yes) {
   }
 
   ensureInteractive("Project name is required in non-interactive mode.");
-  return prompt("Project name", "my-app");
+  const answer = await input({
+    default: "my-app",
+    message: "Project name",
+    validate: (value) => (value.trim() ? true : "Project name is required."),
+  });
+
+  return answer.trim();
+}
+
+export async function resolveChoiceOption({ choices, currentValue, defaultValue, message, yes }) {
+  if (currentValue) {
+    return currentValue;
+  }
+
+  if (yes || !isInteractive()) {
+    return defaultValue;
+  }
+
+  return select({
+    choices,
+    default: defaultValue,
+    message,
+  });
 }
 
 export async function resolveBooleanOption({ currentValue, defaultValue, message, yes }) {
@@ -23,20 +46,19 @@ export async function resolveBooleanOption({ currentValue, defaultValue, message
     return defaultValue;
   }
 
-  const answer = await prompt(`${message} ${defaultValue ? "[Y/n]" : "[y/N]"}`, defaultValue ? "y" : "n");
-  return ["y", "yes"].includes(answer.trim().toLowerCase());
+  return confirm({
+    default: defaultValue,
+    message,
+  });
 }
 
 export async function prompt(label, defaultValue) {
-  const rl = createInterface({ input, output });
+  const answer = await input({
+    default: defaultValue,
+    message: label,
+  });
 
-  try {
-    const suffix = defaultValue ? ` (${defaultValue})` : "";
-    const answer = await rl.question(`${label}${suffix}: `);
-    return answer.trim() || defaultValue;
-  } finally {
-    rl.close();
-  }
+  return answer.trim() || defaultValue;
 }
 
 export function ensureInteractive(message) {
@@ -46,5 +68,5 @@ export function ensureInteractive(message) {
 }
 
 export function isInteractive() {
-  return Boolean(input.isTTY && output.isTTY);
+  return Boolean(stdin.isTTY && stdout.isTTY);
 }

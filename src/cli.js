@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { helpText, parseArgs } from "./args.js";
 import { detectPackageManager, runCommand } from "./commands.js";
-import { prepareTargetDirectory } from "./filesystem.js";
+import { prepareTargetDirectory, targetDirectoryNeedsOverwrite } from "./filesystem.js";
 import { printSuccess } from "./output.js";
 import { toPackageName } from "./package-name.js";
 import { resolveBooleanOption, resolveTargetName } from "./prompts.js";
@@ -28,8 +28,17 @@ export async function main() {
   const targetDir = path.resolve(process.cwd(), targetName);
   const packageName = toPackageName(path.basename(targetDir));
   const packageManager = detectPackageManager();
+  const needsOverwrite = await targetDirectoryNeedsOverwrite(targetDir);
+  const shouldOverwrite = needsOverwrite
+    ? await resolveBooleanOption({
+        currentValue: options.overwrite,
+        defaultValue: false,
+        message: `Target directory is not empty. Overwrite ${targetName}?`,
+        yes: options.yes,
+      })
+    : Boolean(options.overwrite);
 
-  await prepareTargetDirectory(targetDir, Boolean(options.overwrite));
+  await prepareTargetDirectory(targetDir, shouldOverwrite);
   await copyTemplate(template, targetDir);
   await updatePackageJson(targetDir, packageName);
   await normalizeTemplateFiles(targetDir);

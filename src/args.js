@@ -17,7 +17,7 @@ export function parseArgs(args) {
     git: options.git,
     help: Boolean(options.help),
     install: options.install,
-    overwrite: Boolean(options.overwrite),
+    overwrite: options.overwrite,
     targetDir: command.processedArgs[0],
     template: options.template,
     yes: Boolean(options.yes),
