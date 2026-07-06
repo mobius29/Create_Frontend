@@ -23,9 +23,7 @@ export async function prepareTargetDirectory(targetDir, overwrite) {
   }
 
   if (!overwrite) {
-    throw new Error(
-      `Target directory is not empty: ${targetDir}\nUse --overwrite to replace its contents.`,
-    );
+    throw new Error(`Target directory is not empty: ${targetDir}\nUse --overwrite to replace its contents.`);
   }
 
   await emptyDirectory(targetDir);

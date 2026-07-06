@@ -1,5 +1,6 @@
 import { cp, readdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
+
 import { defaultTemplate, templatesRoot } from "./config.js";
 import { pathExists } from "./filesystem.js";
 import { isInteractive, prompt } from "./prompts.js";
@@ -21,9 +22,7 @@ export async function getTemplates() {
 export async function resolveTemplate(templateName, templates, yes) {
   if (templateName) {
     if (!templates.includes(templateName)) {
-      throw new Error(
-        `Unknown template "${templateName}". Available templates: ${templates.join(", ")}.`,
-      );
+      throw new Error(`Unknown template "${templateName}". Available templates: ${templates.join(", ")}.`);
     }
 
     return templateName;
@@ -37,15 +36,10 @@ export async function resolveTemplate(templateName, templates, yes) {
     return templates[0];
   }
 
-  const answer = await prompt(
-    `Template (${templates.join(", ")})`,
-    templates[0],
-  );
+  const answer = await prompt(`Template (${templates.join(", ")})`, templates[0]);
 
   if (!templates.includes(answer)) {
-    throw new Error(
-      `Unknown template "${answer}". Available templates: ${templates.join(", ")}.`,
-    );
+    throw new Error(`Unknown template "${answer}". Available templates: ${templates.join(", ")}.`);
   }
 
   return answer;
@@ -67,9 +61,7 @@ function shouldSkipTemplateFile(source) {
   const relativePath = path.relative(templatesRoot, source);
   const segments = relativePath.split(path.sep);
   return segments.some((segment) =>
-    ["node_modules", "build", "dist", ".react-router", ".pnpm-store"].includes(
-      segment,
-    ),
+    ["node_modules", "build", "dist", ".react-router", ".pnpm-store"].includes(segment),
   );
 }
 

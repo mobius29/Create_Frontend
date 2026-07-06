@@ -11,9 +11,7 @@ export function runCommand(command, args, cwd) {
   }
 
   if (result.status !== 0) {
-    throw new Error(
-      `${command} ${args.join(" ")} failed with exit code ${result.status}.`,
-    );
+    throw new Error(`${command} ${args.join(" ")} failed with exit code ${result.status}.`);
   }
 }
 

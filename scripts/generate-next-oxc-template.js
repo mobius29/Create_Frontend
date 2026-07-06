@@ -1,22 +1,12 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import {
-  cp,
-  mkdir,
-  mkdtemp,
-  readFile,
-  rm,
-  writeFile,
-} from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const templateName = "next-oxc";
 const templateDir = path.join(repoRoot, "templates", templateName);
 const force = process.argv.includes("--force");
@@ -39,11 +29,7 @@ const devDependencies = {
   "oxlint-tsgolint": "^0.22.1",
 };
 
-const generatedLinterPackages = [
-  "@biomejs/biome",
-  "eslint",
-  "eslint-config-next",
-];
+const generatedLinterPackages = ["@biomejs/biome", "eslint", "eslint-config-next"];
 
 const packageScripts = {
   dev: "next dev",
@@ -64,9 +50,7 @@ main().catch((error) => {
 
 async function main() {
   if (!force && existsSync(templateDir)) {
-    throw new Error(
-      `${path.relative(repoRoot, templateDir)} already exists. Re-run with --force to replace it.`,
-    );
+    throw new Error(`${path.relative(repoRoot, templateDir)} already exists. Re-run with --force to replace it.`);
   }
 
   const tempRoot = await mkdtemp(path.join(os.tmpdir(), "next-oxc-template-"));
@@ -205,9 +189,7 @@ ignoredBuiltDependencies:
 
 async function normalizeIgnoredFiles(projectDir) {
   const gitignorePath = path.join(projectDir, ".gitignore");
-  const gitignore = existsSync(gitignorePath)
-    ? await readFile(gitignorePath, "utf8")
-    : defaultGitignore();
+  const gitignore = existsSync(gitignorePath) ? await readFile(gitignorePath, "utf8") : defaultGitignore();
 
   await writeFile(path.join(projectDir, "_gitignore"), gitignore);
 
@@ -238,9 +220,7 @@ function run(command, args) {
   }
 
   if (result.status !== 0) {
-    throw new Error(
-      `${command} ${args.join(" ")} failed with exit code ${result.status}.`,
-    );
+    throw new Error(`${command} ${args.join(" ")} failed with exit code ${result.status}.`);
   }
 }
 
@@ -249,11 +229,7 @@ async function writeJson(filePath, value) {
 }
 
 function sortObject(value) {
-  return Object.fromEntries(
-    Object.entries(value ?? {}).sort(([left], [right]) =>
-      left.localeCompare(right),
-    ),
-  );
+  return Object.fromEntries(Object.entries(value ?? {}).sort(([left], [right]) => left.localeCompare(right)));
 }
 
 function defaultGitignore() {

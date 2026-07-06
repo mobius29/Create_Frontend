@@ -1,11 +1,6 @@
 import path from "node:path";
 
-export function printSuccess({
-  packageManager,
-  projectName,
-  shouldInstall,
-  targetDir,
-}) {
+export function printSuccess({ packageManager, projectName, shouldInstall, targetDir }) {
   const relativeTarget = path.relative(process.cwd(), targetDir) || ".";
   const runPrefix = packageManager === "npm" ? "npm run" : packageManager;
 

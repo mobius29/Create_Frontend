@@ -60,16 +60,16 @@ pnpm dlx @mobius29/template-frontend my-app --overwrite
 
 ## CLI Options
 
-| Option | Description |
-| --- | --- |
+| Option              | Description                                                   |
+| ------------------- | ------------------------------------------------------------- |
 | `--template <name>` | 사용할 템플릿을 지정합니다. 기본값은 `react-router-ts`입니다. |
-| `--install` | 생성 후 의존성을 설치합니다. |
-| `--no-install` | 의존성 설치를 건너뜁니다. |
-| `--git` | 생성 후 `git init`을 실행합니다. |
-| `--no-git` | Git 초기화를 건너뜁니다. |
-| `--overwrite` | 대상 폴더가 비어 있지 않아도 내용을 삭제하고 생성합니다. |
-| `-y`, `--yes` | 프롬프트 없이 기본값을 사용합니다. |
-| `-h`, `--help` | 도움말을 출력합니다. |
+| `--install`         | 생성 후 의존성을 설치합니다.                                  |
+| `--no-install`      | 의존성 설치를 건너뜁니다.                                     |
+| `--git`             | 생성 후 `git init`을 실행합니다.                              |
+| `--no-git`          | Git 초기화를 건너뜁니다.                                      |
+| `--overwrite`       | 대상 폴더가 비어 있지 않아도 내용을 삭제하고 생성합니다.      |
+| `-y`, `--yes`       | 프롬프트 없이 기본값을 사용합니다.                            |
+| `-h`, `--help`      | 도움말을 출력합니다.                                          |
 
 ## Templates
 
@@ -248,11 +248,11 @@ pnpm dlx @mobius29/template-frontend@latest my-app
 
 `pnpm create`는 입력한 이름 앞에 `create-`를 붙여 패키지를 찾습니다.
 
-| Command | Package |
-| --- | --- |
-| `pnpm create frontend` | `create-frontend` |
+| Command                       | Package                  |
+| ----------------------------- | ------------------------ |
+| `pnpm create frontend`        | `create-frontend`        |
 | `pnpm create @scope/frontend` | `@scope/create-frontend` |
-| `pnpm create @scope` | `@scope/create` |
+| `pnpm create @scope`          | `@scope/create`          |
 
 현재 패키지 이름은 `@mobius29/template-frontend`이므로 `pnpm create frontend` 대상 패키지가 아닙니다.
 `pnpm create @mobius29/frontend` 명령을 쓰려면 패키지 이름을 `@mobius29/create-frontend`로 배포해야 합니다.

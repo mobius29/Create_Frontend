@@ -14,12 +14,7 @@ export async function resolveTargetName(targetDir, yes) {
   return prompt("Project name", "my-app");
 }
 
-export async function resolveBooleanOption({
-  currentValue,
-  defaultValue,
-  message,
-  yes,
-}) {
+export async function resolveBooleanOption({ currentValue, defaultValue, message, yes }) {
   if (typeof currentValue === "boolean") {
     return currentValue;
   }
@@ -28,10 +23,7 @@ export async function resolveBooleanOption({
     return defaultValue;
   }
 
-  const answer = await prompt(
-    `${message} ${defaultValue ? "[Y/n]" : "[y/N]"}`,
-    defaultValue ? "y" : "n",
-  );
+  const answer = await prompt(`${message} ${defaultValue ? "[Y/n]" : "[y/N]"}`, defaultValue ? "y" : "n");
   return ["y", "yes"].includes(answer.trim().toLowerCase());
 }
 
