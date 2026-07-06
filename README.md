@@ -24,10 +24,8 @@ pnpm create @mobius29/frontend
 
 ## Usage
 
-인자를 주지 않으면 CLI가 필요한 값을 순서대로 물어봅니다.
-
 ```bash
-pnpm create @mobius29/frontend
+pnpm create @mobius29/frontend {my-app}
 ```
 
 인터랙티브 모드에서 선택하는 항목:
@@ -38,43 +36,7 @@ pnpm create @mobius29/frontend
 - 의존성 설치 여부
 - Git 저장소 초기화 여부
 
-프로젝트 이름을 바로 지정하려면:
-
-```bash
-pnpm create @mobius29/frontend my-app
-```
-
-템플릿을 바로 지정하려면:
-
-```bash
-pnpm create @mobius29/frontend my-app --template react-router-ts
-```
-
-Next.js 템플릿을 바로 사용하려면:
-
-```bash
-pnpm create @mobius29/frontend my-app --template next-oxc
-```
-
-생성 후 의존성 설치까지 바로 실행하려면:
-
-```bash
-pnpm create @mobius29/frontend my-app --install
-```
-
-Git 저장소 초기화까지 바로 실행하려면:
-
-```bash
-pnpm create @mobius29/frontend my-app --install --git
-```
-
-기존 폴더를 프롬프트 없이 비우고 다시 생성하려면:
-
-```bash
-pnpm create @mobius29/frontend my-app --overwrite
-```
-
-## CLI Options
+### CLI Options
 
 | Option              | Description                                                                                   |
 | ------------------- | --------------------------------------------------------------------------------------------- |
