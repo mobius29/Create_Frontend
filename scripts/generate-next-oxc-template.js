@@ -12,21 +12,30 @@ const templateDir = path.join(repoRoot, "templates", templateName);
 const force = process.argv.includes("--force");
 
 const dependencies = {
-  "@hookform/resolvers": "^5.2.2",
-  "@tanstack/react-query": "^5.100.10",
+  "@hookform/resolvers": "^5.4.0",
+  "@tanstack/react-query": "^5.101.2",
   ky: "^2.0.2",
-  "react-hook-form": "^7.75.0",
+  next: "16.2.10",
+  react: "19.2.7",
+  "react-dom": "19.2.7",
+  "react-hook-form": "^7.81.0",
   zod: "^4.4.3",
 };
 
 const devDependencies = {
-  "@tanstack/eslint-plugin-query": "^5.100.10",
+  "@tailwindcss/postcss": "^4.3.2",
+  "@tanstack/eslint-plugin-query": "^5.101.2",
+  "@types/node": "^26.1.1",
+  "@types/react": "^19.2.17",
+  "@types/react-dom": "^19.2.3",
   "babel-plugin-react-compiler": "1.0.0",
   husky: "^9.1.7",
-  "lint-staged": "^16.4.0",
-  oxfmt: "^0.47.0",
-  oxlint: "^1.62.0",
-  "oxlint-tsgolint": "^0.22.1",
+  "lint-staged": "^17.0.8",
+  oxfmt: "^0.58.0",
+  oxlint: "^1.73.0",
+  "oxlint-tsgolint": "^0.24.0",
+  tailwindcss: "^4.3.2",
+  typescript: "^6.0.3",
 };
 
 const generatedLinterPackages = ["@biomejs/biome", "eslint", "eslint-config-next"];
@@ -99,6 +108,7 @@ async function updatePackageJson(projectDir) {
   const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 
   packageJson.name = templateName;
+  packageJson.type = "module";
   packageJson.scripts = packageScripts;
   packageJson.dependencies = sortObject({
     ...packageJson.dependencies,

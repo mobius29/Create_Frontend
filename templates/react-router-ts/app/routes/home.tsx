@@ -18,7 +18,7 @@ const highlights = [
   },
 ];
 
-const stack = ["React 19", "React Router 7", "Tailwind CSS 4", "TanStack Query", "React Hook Form", "Zod", "ky"];
+const stack = ["React 19", "React Router 8", "Tailwind CSS 4", "TanStack Query", "React Hook Form", "Zod", "ky"];
 
 export function meta() {
   return [
