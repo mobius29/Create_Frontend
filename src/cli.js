@@ -60,12 +60,12 @@ export async function main() {
     yes: options.yes,
   });
 
-  if (shouldInstall) {
-    runCommand(packageManager, ["install"], targetDir);
-  }
-
   if (shouldInitGit) {
     runCommand("git", ["init"], targetDir);
+  }
+
+  if (shouldInstall) {
+    runCommand(packageManager, ["install"], targetDir);
   }
 
   printSuccess({

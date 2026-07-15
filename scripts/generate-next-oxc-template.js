@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -128,6 +128,10 @@ async function updatePackageJson(projectDir) {
 }
 
 async function writeTemplateFiles(projectDir) {
+  const huskyDir = path.join(projectDir, ".husky");
+
+  await mkdir(huskyDir, { recursive: true });
+
   await Promise.all([
     writeFile(
       path.join(projectDir, "next.config.ts"),
@@ -185,6 +189,8 @@ export default defineConfig({
         2,
       )}\n`,
     ),
+    writeFile(path.join(huskyDir, "pre-commit"), "pnpm exec lint-staged\n"),
+    writeFile(path.join(huskyDir, "pre-push"), "pnpm run build\n"),
     writeFile(
       path.join(projectDir, "pnpm-workspace.yaml"),
       `allowBuilds:
@@ -195,6 +201,8 @@ ignoredBuiltDependencies:
 `,
     ),
   ]);
+
+  await Promise.all([chmod(path.join(huskyDir, "pre-commit"), 0o755), chmod(path.join(huskyDir, "pre-push"), 0o755)]);
 }
 
 async function normalizeIgnoredFiles(projectDir) {
