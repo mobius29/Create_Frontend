@@ -1,22 +1,20 @@
-import { constants } from "node:fs";
-import { access, mkdir, readdir, rm, stat } from "node:fs/promises";
-import path from "node:path";
+import fs from "fs-extra";
 
 export async function prepareTargetDirectory(targetDir, overwrite) {
-  const exists = await pathExists(targetDir);
+  const exists = await fs.pathExists(targetDir);
 
   if (!exists) {
-    await mkdir(targetDir, { recursive: true });
+    await fs.ensureDir(targetDir);
     return;
   }
 
-  const targetStat = await stat(targetDir);
+  const targetStat = await fs.stat(targetDir);
 
   if (!targetStat.isDirectory()) {
     throw new Error(`Target path exists and is not a directory: ${targetDir}`);
   }
 
-  const files = await readdir(targetDir);
+  const files = await fs.readdir(targetDir);
 
   if (files.length === 0) {
     return;
@@ -26,44 +24,26 @@ export async function prepareTargetDirectory(targetDir, overwrite) {
     throw new Error(`Target directory is not empty: ${targetDir}\nUse --overwrite to replace its contents.`);
   }
 
-  await emptyDirectory(targetDir);
+  await fs.emptyDir(targetDir);
 }
 
 export async function targetDirectoryNeedsOverwrite(targetDir) {
-  const exists = await pathExists(targetDir);
+  const exists = await fs.pathExists(targetDir);
 
   if (!exists) {
     return false;
   }
 
-  const targetStat = await stat(targetDir);
+  const targetStat = await fs.stat(targetDir);
 
   if (!targetStat.isDirectory()) {
     return false;
   }
 
-  const files = await readdir(targetDir);
+  const files = await fs.readdir(targetDir);
   return files.length > 0;
 }
 
-async function emptyDirectory(directory) {
-  const entries = await readdir(directory);
-
-  await Promise.all(
-    entries.map((entry) =>
-      rm(path.join(directory, entry), {
-        force: true,
-        recursive: true,
-      }),
-    ),
-  );
-}
-
 export async function pathExists(filePath) {
-  try {
-    await access(filePath, constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
+  return fs.pathExists(filePath);
 }

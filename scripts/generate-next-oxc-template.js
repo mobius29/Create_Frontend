@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+import { runCommand } from "../src/commands.js";
+import { readJson, sortObject, writeJson } from "../src/json.js";
+import { repoRoot } from "./config.js";
+
 const templateName = "next-oxc";
 const templateDir = path.join(repoRoot, "templates", templateName);
 const force = process.argv.includes("--force");
@@ -66,21 +67,25 @@ async function main() {
   const generatedDir = path.join(tempRoot, templateName);
 
   try {
-    run("pnpm", [
-      "create",
-      "next-app@latest",
-      generatedDir,
-      "--yes",
-      "--ts",
-      "--tailwind",
-      "--app",
-      "--src-dir",
-      "--import-alias",
-      "@/*",
-      "--skip-install",
-      "--disable-git",
-      "--no-agents-md",
-    ]);
+    await runCommand(
+      "pnpm",
+      [
+        "create",
+        "next-app@latest",
+        generatedDir,
+        "--yes",
+        "--ts",
+        "--tailwind",
+        "--app",
+        "--src-dir",
+        "--import-alias",
+        "@/*",
+        "--skip-install",
+        "--disable-git",
+        "--no-agents-md",
+      ],
+      repoRoot,
+    );
 
     await applyTemplateDefaults(generatedDir);
 
@@ -105,7 +110,7 @@ async function applyTemplateDefaults(projectDir) {
 
 async function updatePackageJson(projectDir) {
   const packageJsonPath = path.join(projectDir, "package.json");
-  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+  const packageJson = await readJson(packageJsonPath);
 
   packageJson.name = templateName;
   packageJson.type = "module";
@@ -225,29 +230,6 @@ async function normalizeIgnoredFiles(projectDir) {
     rm(path.join(projectDir, "node_modules"), { force: true, recursive: true }),
     rm(path.join(projectDir, "pnpm-lock.yaml"), { force: true }),
   ]);
-}
-
-function run(command, args) {
-  const result = spawnSync(command, args, {
-    cwd: repoRoot,
-    stdio: "inherit",
-  });
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (result.status !== 0) {
-    throw new Error(`${command} ${args.join(" ")} failed with exit code ${result.status}.`);
-  }
-}
-
-async function writeJson(filePath, value) {
-  await writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`);
-}
-
-function sortObject(value) {
-  return Object.fromEntries(Object.entries(value ?? {}).sort(([left], [right]) => left.localeCompare(right)));
 }
 
 function defaultGitignore() {

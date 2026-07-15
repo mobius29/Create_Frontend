@@ -1,6 +1,13 @@
 import { stdin, stdout } from "node:process";
 
-import { confirm, input, select } from "@inquirer/prompts";
+import { cancel, confirm, isCancel, select, text } from "@clack/prompts";
+
+export class PromptCancelledError extends Error {
+  constructor() {
+    super("Operation cancelled.");
+    this.name = "PromptCancelledError";
+  }
+}
 
 export async function resolveTargetName(targetDir, yes) {
   if (targetDir) {
@@ -12,13 +19,13 @@ export async function resolveTargetName(targetDir, yes) {
   }
 
   ensureInteractive("Project name is required in non-interactive mode.");
-  const answer = await input({
-    default: "my-app",
+  const answer = await text({
+    initialValue: "my-app",
     message: "Project name",
-    validate: (value) => (value.trim() ? true : "Project name is required."),
+    validate: (value) => (value.trim() ? undefined : "Project name is required."),
   });
 
-  return answer.trim();
+  return unwrapPrompt(answer).trim();
 }
 
 export async function resolveChoiceOption({ choices, currentValue, defaultValue, message, yes }) {
@@ -30,11 +37,13 @@ export async function resolveChoiceOption({ choices, currentValue, defaultValue,
     return defaultValue;
   }
 
-  return select({
-    choices,
-    default: defaultValue,
+  const answer = await select({
+    initialValue: defaultValue,
     message,
+    options: choices,
   });
+
+  return unwrapPrompt(answer);
 }
 
 export async function resolveBooleanOption({ currentValue, defaultValue, message, yes }) {
@@ -46,19 +55,12 @@ export async function resolveBooleanOption({ currentValue, defaultValue, message
     return defaultValue;
   }
 
-  return confirm({
-    default: defaultValue,
+  const answer = await confirm({
+    initialValue: defaultValue,
     message,
   });
-}
 
-export async function prompt(label, defaultValue) {
-  const answer = await input({
-    default: defaultValue,
-    message: label,
-  });
-
-  return answer.trim() || defaultValue;
+  return unwrapPrompt(answer);
 }
 
 export function ensureInteractive(message) {
@@ -69,4 +71,13 @@ export function ensureInteractive(message) {
 
 export function isInteractive() {
   return Boolean(stdin.isTTY && stdout.isTTY);
+}
+
+function unwrapPrompt(value) {
+  if (!isCancel(value)) {
+    return value;
+  }
+
+  cancel("Operation cancelled.");
+  throw new PromptCancelledError();
 }

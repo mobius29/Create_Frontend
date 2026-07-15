@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const checkRoots = ["src", "scripts"];
+import { runCommand } from "../src/commands.js";
+import { repoRoot } from "./config.js";
+
+const checkRoots = ["src", "scripts", "test"];
 
 main().catch((error) => {
   const message = error instanceof Error ? error.message : String(error);
@@ -19,7 +19,7 @@ async function main() {
     .sort();
 
   for (const file of files) {
-    runNodeCheck(file);
+    await runNodeCheck(file);
   }
 }
 
@@ -43,18 +43,7 @@ async function collectJavaScriptFiles(directory) {
   return files;
 }
 
-function runNodeCheck(file) {
+async function runNodeCheck(file) {
   const relativeFile = path.relative(repoRoot, file);
-  const result = spawnSync(process.execPath, ["--check", relativeFile], {
-    cwd: repoRoot,
-    stdio: "inherit",
-  });
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (result.status !== 0) {
-    throw new Error(`node --check ${relativeFile} failed with exit code ${result.status}.`);
-  }
+  await runCommand(process.execPath, ["--check", relativeFile], repoRoot);
 }

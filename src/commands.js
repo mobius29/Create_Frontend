@@ -1,18 +1,10 @@
-import { spawnSync } from "node:child_process";
+import { execa } from "execa";
 
-export function runCommand(command, args, cwd) {
-  const result = spawnSync(command, args, {
+export async function runCommand(command, args, cwd) {
+  await execa(command, args, {
     cwd,
     stdio: "inherit",
   });
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (result.status !== 0) {
-    throw new Error(`${command} ${args.join(" ")} failed with exit code ${result.status}.`);
-  }
 }
 
 export function detectPackageManager() {

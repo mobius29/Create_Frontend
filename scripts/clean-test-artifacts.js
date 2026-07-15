@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { readFile, rm } from "node:fs/promises";
-import os from "node:os";
+import { rm } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+import { readJson } from "../src/json.js";
+import { repoRoot, smokeTargets } from "./config.js";
+
 const dryRun = process.argv.includes("--dry-run");
 
 main().catch((error) => {
@@ -14,12 +14,11 @@ main().catch((error) => {
 });
 
 async function main() {
-  const packageJson = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+  const packageJson = await readJson(path.join(repoRoot, "package.json"));
   const tarballName = toTarballName(packageJson.name, packageJson.version);
   const artifacts = [
-    path.join(os.tmpdir(), "create-frontend-smoke"),
-    path.join(os.tmpdir(), "create-frontend-next-oxc-smoke"),
-    path.join(os.tmpdir(), tarballName),
+    ...Object.values(smokeTargets),
+    path.join(path.dirname(smokeTargets["react-router-ts"]), tarballName),
     path.join(repoRoot, tarballName),
   ];
 

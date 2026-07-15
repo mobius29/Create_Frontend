@@ -1,12 +1,14 @@
 import path from "node:path";
 
+import { intro } from "@clack/prompts";
+
 import { helpText, parseArgs } from "./args.js";
 import { applyBackendIntegration, resolveBackend } from "./backend-integrations.js";
 import { detectPackageManager, runCommand } from "./commands.js";
 import { prepareTargetDirectory, targetDirectoryNeedsOverwrite } from "./filesystem.js";
 import { printSuccess } from "./output.js";
 import { toPackageName } from "./package-name.js";
-import { resolveBooleanOption, resolveTargetName } from "./prompts.js";
+import { isInteractive, resolveBooleanOption, resolveTargetName } from "./prompts.js";
 import {
   copyTemplate,
   getTemplates,
@@ -23,6 +25,17 @@ export async function main() {
     return;
   }
 
+  if (isInteractive()) {
+    intro("create-frontend");
+  }
+
+  const project = await resolveProject(options);
+
+  await createProject(project);
+  printSuccess(project);
+}
+
+async function resolveProject(options) {
   const templates = await getTemplates();
   const template = await resolveTemplate(options.template, templates, options.yes);
   const backend = await resolveBackend(options.backend, template, options.yes);
@@ -40,12 +53,6 @@ export async function main() {
       })
     : Boolean(options.overwrite);
 
-  await prepareTargetDirectory(targetDir, shouldOverwrite);
-  await copyTemplate(template, targetDir);
-  await updatePackageJson(targetDir, packageName);
-  await normalizeTemplateFiles(targetDir);
-  await applyBackendIntegration(backend, template, targetDir);
-
   const shouldInstall = await resolveBooleanOption({
     currentValue: options.install,
     defaultValue: false,
@@ -60,18 +67,34 @@ export async function main() {
     yes: options.yes,
   });
 
+  return {
+    backend,
+    packageManager,
+    packageName,
+    projectName: path.basename(targetDir),
+    shouldInitGit,
+    shouldInstall,
+    shouldOverwrite,
+    targetDir,
+    template,
+  };
+}
+
+async function createProject(project) {
+  const { backend, packageManager, packageName, shouldInitGit, shouldInstall, shouldOverwrite, targetDir, template } =
+    project;
+
+  await prepareTargetDirectory(targetDir, shouldOverwrite);
+  await copyTemplate(template, targetDir);
+  await updatePackageJson(targetDir, packageName);
+  await normalizeTemplateFiles(targetDir);
+  await applyBackendIntegration(backend, template, targetDir);
+
   if (shouldInitGit) {
-    runCommand("git", ["init"], targetDir);
+    await runCommand("git", ["init"], targetDir);
   }
 
   if (shouldInstall) {
-    runCommand(packageManager, ["install"], targetDir);
+    await runCommand(packageManager, ["install"], targetDir);
   }
-
-  printSuccess({
-    packageManager,
-    projectName: path.basename(targetDir),
-    shouldInstall,
-    targetDir,
-  });
 }

@@ -1,12 +1,13 @@
-import { cp, readdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import fs from "fs-extra";
+
 import { defaultTemplate, templatesRoot } from "./config.js";
-import { pathExists } from "./filesystem.js";
+import { readJson, writeJson } from "./json.js";
 import { resolveChoiceOption } from "./prompts.js";
 
 export async function getTemplates() {
-  const entries = await readdir(templatesRoot, { withFileTypes: true });
+  const entries = await fs.readdir(templatesRoot, { withFileTypes: true });
   const templates = entries
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
@@ -32,7 +33,7 @@ export async function resolveTemplate(templateName, templates, yes) {
 
   return resolveChoiceOption({
     choices: templates.map((template) => ({
-      name: template,
+      label: template,
       value: template,
     })),
     currentValue: templateName,
@@ -45,7 +46,7 @@ export async function resolveTemplate(templateName, templates, yes) {
 export async function copyTemplate(templateName, targetDir) {
   const sourceDir = path.join(templatesRoot, templateName);
 
-  await cp(sourceDir, targetDir, {
+  await fs.copy(sourceDir, targetDir, {
     dereference: true,
     errorOnExist: false,
     filter: (source) => !shouldSkipTemplateFile(source),
@@ -64,17 +65,17 @@ function shouldSkipTemplateFile(source) {
 
 export async function updatePackageJson(targetDir, packageName) {
   const packageJsonPath = path.join(targetDir, "package.json");
-  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+  const packageJson = await readJson(packageJsonPath);
 
   packageJson.name = packageName;
 
-  await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
+  await writeJson(packageJsonPath, packageJson);
 }
 
 export async function normalizeTemplateFiles(targetDir) {
   const gitignoreTemplate = path.join(targetDir, "_gitignore");
 
-  if (await pathExists(gitignoreTemplate)) {
-    await rename(gitignoreTemplate, path.join(targetDir, ".gitignore"));
+  if (await fs.pathExists(gitignoreTemplate)) {
+    await fs.move(gitignoreTemplate, path.join(targetDir, ".gitignore"), { overwrite: true });
   }
 }

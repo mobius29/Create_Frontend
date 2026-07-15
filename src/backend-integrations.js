@@ -1,6 +1,8 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import fs from "fs-extra";
+
+import { readJson, sortObject, writeJson } from "./json.js";
 import { resolveChoiceOption } from "./prompts.js";
 
 export const defaultBackend = "none";
@@ -28,7 +30,7 @@ export async function resolveBackend(backendName, templateName, yes) {
 
   return resolveChoiceOption({
     choices: backends.map((backend) => ({
-      name: backend,
+      label: backend,
       value: backend,
     })),
     currentValue: backendName,
@@ -74,7 +76,7 @@ async function applySupabaseIntegration(templateName, targetDir) {
 
 async function addPackageDependency(targetDir, packageName, version) {
   const packageJsonPath = path.join(targetDir, "package.json");
-  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+  const packageJson = await readJson(packageJsonPath);
 
   packageJson.dependencies = sortObject({
     ...packageJson.dependencies,
@@ -85,15 +87,16 @@ async function addPackageDependency(targetDir, packageName, version) {
 }
 
 async function writeReactRouterSupabaseFiles(targetDir) {
+  await fs.ensureDir(path.join(targetDir, "app", "lib"));
+
   await Promise.all([
-    mkdir(path.join(targetDir, "app", "lib"), { recursive: true }),
-    writeFile(
+    fs.writeFile(
       path.join(targetDir, ".env.example"),
       `VITE_SUPABASE_URL=YOUR_SUPABASE_URL
 VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
 `,
     ),
-    writeFile(
+    fs.writeFile(
       path.join(targetDir, "app", "env.d.ts"),
       `interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string;
@@ -108,7 +111,7 @@ interface ImportMeta {
     ),
   ]);
 
-  await writeFile(
+  await fs.writeFile(
     path.join(targetDir, "app", "lib", "supabase.ts"),
     `import { createClient } from "@supabase/supabase-js";
 
@@ -126,8 +129,8 @@ export const supabase = createClient(supabaseUrl, supabasePublishableKey);
 
 async function writeNextSupabaseFiles(targetDir) {
   await Promise.all([
-    mkdir(path.join(targetDir, "src", "lib"), { recursive: true }),
-    writeFile(
+    fs.ensureDir(path.join(targetDir, "src", "lib")),
+    fs.writeFile(
       path.join(targetDir, ".env.example"),
       `NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
@@ -135,7 +138,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
     ),
   ]);
 
-  await writeFile(
+  await fs.writeFile(
     path.join(targetDir, "src", "lib", "supabase.ts"),
     `import { createClient } from "@supabase/supabase-js";
 
@@ -156,7 +159,7 @@ async function allowEnvExample(targetDir) {
   let gitignore;
 
   try {
-    gitignore = await readFile(gitignorePath, "utf8");
+    gitignore = await fs.readFile(gitignorePath, "utf8");
   } catch {
     return;
   }
@@ -169,13 +172,5 @@ async function allowEnvExample(targetDir) {
     ? gitignore.replace(".env*", ".env*\n!.env.example")
     : `${gitignore.trimEnd()}\n!.env.example\n`;
 
-  await writeFile(gitignorePath, updatedGitignore);
-}
-
-async function writeJson(filePath, value) {
-  await writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`);
-}
-
-function sortObject(value) {
-  return Object.fromEntries(Object.entries(value ?? {}).sort(([left], [right]) => left.localeCompare(right)));
+  await fs.writeFile(gitignorePath, updatedGitignore);
 }
