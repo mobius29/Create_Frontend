@@ -14,6 +14,7 @@ export function parseArgs(args) {
   const options = command.opts();
 
   return {
+    backend: options.backend,
     git: options.git,
     help: Boolean(options.help),
     install: options.install,
@@ -30,6 +31,7 @@ function createArgsCommand() {
     .usage("[project-name] [options]")
     .argument("[project-name]", "Project directory to create.")
     .option("--template <name>", "Template to use. Defaults to react-router-ts.")
+    .option("--backend <name>", "Backend integration to add. Choices: none, supabase. Defaults to none.")
     .option("--install", "Install dependencies after generating the project.")
     .option("--no-install", "Skip dependency installation.")
     .option("--git", "Initialize a git repository.")

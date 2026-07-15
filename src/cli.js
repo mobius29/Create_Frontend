@@ -1,6 +1,7 @@
 import path from "node:path";
 
 import { helpText, parseArgs } from "./args.js";
+import { applyBackendIntegration, resolveBackend } from "./backend-integrations.js";
 import { detectPackageManager, runCommand } from "./commands.js";
 import { prepareTargetDirectory, targetDirectoryNeedsOverwrite } from "./filesystem.js";
 import { printSuccess } from "./output.js";
@@ -24,6 +25,7 @@ export async function main() {
 
   const templates = await getTemplates();
   const template = await resolveTemplate(options.template, templates, options.yes);
+  const backend = await resolveBackend(options.backend, template, options.yes);
   const targetName = await resolveTargetName(options.targetDir, options.yes);
   const targetDir = path.resolve(process.cwd(), targetName);
   const packageName = toPackageName(path.basename(targetDir));
@@ -42,6 +44,7 @@ export async function main() {
   await copyTemplate(template, targetDir);
   await updatePackageJson(targetDir, packageName);
   await normalizeTemplateFiles(targetDir);
+  await applyBackendIntegration(backend, template, targetDir);
 
   const shouldInstall = await resolveBooleanOption({
     currentValue: options.install,

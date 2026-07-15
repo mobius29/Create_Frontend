@@ -11,6 +11,7 @@
     "oxlint",
     "react",
     "react-router",
+    "supabase",
     "tailwindcss",
     "template"
   ],
@@ -29,7 +30,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "check": "node --check src/index.js && node --check src/args.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js && node --check scripts/generate-next-oxc-template.js && node --check scripts/clean-test-artifacts.js",
+    "check": "node --check src/index.js && node --check src/args.js && node --check src/backend-integrations.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js && node --check scripts/generate-next-oxc-template.js && node --check scripts/clean-test-artifacts.js",
     "clean:test": "node scripts/clean-test-artifacts.js",
     "clean:test:dry": "node scripts/clean-test-artifacts.js --dry-run",
     "install:next-oxc": "node scripts/generate-next-oxc-template.js --force",
