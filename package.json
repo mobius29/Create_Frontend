@@ -30,12 +30,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "check": "node --check src/index.js && node --check src/args.js && node --check src/backend-integrations.js && node --check src/cli.js && node --check src/commands.js && node --check src/config.js && node --check src/filesystem.js && node --check src/output.js && node --check src/package-name.js && node --check src/prompts.js && node --check src/template-files.js && node --check scripts/generate-next-oxc-template.js && node --check scripts/clean-test-artifacts.js",
+    "check": "node scripts/check.js",
     "clean:test": "node scripts/clean-test-artifacts.js",
     "clean:test:dry": "node scripts/clean-test-artifacts.js --dry-run",
     "install:next-oxc": "node scripts/generate-next-oxc-template.js --force",
-    "smoke": "node src/index.js /tmp/create-frontend-smoke --template react-router-ts --no-install --no-git --overwrite",
-    "smoke:next-oxc": "node src/index.js /tmp/create-frontend-next-oxc-smoke --template next-oxc --no-install --no-git --overwrite",
+    "smoke": "node scripts/smoke.js",
+    "smoke:next-oxc": "node scripts/smoke.js next-oxc",
     "pack:dry": "pnpm pack --dry-run",
     "publish:public": "pnpm publish --access public --registry https://registry.npmjs.org/",
     "lint": "oxlint --disable-nested-config",
