@@ -21,7 +21,7 @@ pnpm create @mobius29/frontend
 - `ky` 기반 HTTP client 유틸
 - oxlint, oxfmt, lint-staged, husky 설정
 - pnpm 11 build-script 승인 설정 포함
-- Dockerfile 포함
+- React Router 템플릿 Dockerfile 포함
 
 ## Usage
 
@@ -122,6 +122,8 @@ Supabase 통합을 선택하면 다음 파일과 설정이 추가됩니다.
 - `@supabase/supabase-js`
 - `src/lib/supabase.ts`
 - `.env.example` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`)
+
+Vercel 배포에는 Dockerfile이 필요하지 않습니다. 자체 서버나 컨테이너 환경에 배포할 때만 Next.js 공식 standalone Docker 구성을 추가하면 됩니다.
 
 ## Project Structure
 
