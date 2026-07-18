@@ -33,7 +33,6 @@ export async function resolveBackend(backendName, templateName, yes) {
       label: backend,
       value: backend,
     })),
-    currentValue: backendName,
     defaultValue,
     message: "Backend",
     yes,
@@ -61,17 +60,13 @@ async function applySupabaseIntegration(templateName, targetDir) {
 
   if (templateName === "react-router-ts") {
     await writeReactRouterSupabaseFiles(targetDir);
-    await allowEnvExample(targetDir);
-    return;
-  }
-
-  if (templateName === "next-oxc") {
+  } else if (templateName === "next-oxc") {
     await writeNextSupabaseFiles(targetDir);
-    await allowEnvExample(targetDir);
-    return;
+  } else {
+    throw new Error(`Supabase is not configured for template "${templateName}".`);
   }
 
-  throw new Error(`Supabase is not configured for template "${templateName}".`);
+  await allowEnvExample(targetDir);
 }
 
 async function addPackageDependency(targetDir, packageName, version) {

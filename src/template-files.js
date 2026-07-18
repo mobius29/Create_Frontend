@@ -36,7 +36,6 @@ export async function resolveTemplate(templateName, templates, yes) {
       label: template,
       value: template,
     })),
-    currentValue: templateName,
     defaultValue,
     message: "Template",
     yes,

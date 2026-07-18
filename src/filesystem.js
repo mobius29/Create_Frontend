@@ -43,7 +43,3 @@ export async function targetDirectoryNeedsOverwrite(targetDir) {
   const files = await fs.readdir(targetDir);
   return files.length > 0;
 }
-
-export async function pathExists(filePath) {
-  return fs.pathExists(filePath);
-}

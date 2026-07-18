@@ -21,7 +21,7 @@ export async function main() {
   const options = parseArgs(process.argv.slice(2));
 
   if (options.help) {
-    console.log(helpText.trim());
+    console.log(helpText);
     return;
   }
 

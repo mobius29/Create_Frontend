@@ -28,11 +28,7 @@ export async function resolveTargetName(targetDir, yes) {
   return unwrapPrompt(answer).trim();
 }
 
-export async function resolveChoiceOption({ choices, currentValue, defaultValue, message, yes }) {
-  if (currentValue) {
-    return currentValue;
-  }
-
+export async function resolveChoiceOption({ choices, defaultValue, message, yes }) {
   if (yes || !isInteractive()) {
     return defaultValue;
   }
