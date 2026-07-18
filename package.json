@@ -1,6 +1,6 @@
 {
   "name": "@mobius29/create-frontend",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create a frontend starter project with React Router, Next.js, React, Tailwind CSS, and pragmatic defaults.",
   "keywords": [
     "create",
