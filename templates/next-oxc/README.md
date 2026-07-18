@@ -1,6 +1,6 @@
 # Next.js OXC Starter
 
-Next.js App Router, TypeScript, Tailwind CSS, React Compiler, oxlint, oxfmt 기반 프로젝트입니다.
+Next.js App Router, TypeScript, Tailwind CSS, React Compiler, TanStack Query, oxlint, oxfmt 기반 프로젝트입니다.
 
 ## 시작
 
